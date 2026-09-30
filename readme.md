@@ -1,299 +1,231 @@
-\# 🚀 AWS Q1 – Serverless Image Upload Workflow
+# 🚀 AWS Q1 – Serverless Image Upload Workflow
 
+## 📌 Project Overview
 
+This project implements a serverless image-upload workflow using Amazon S3, AWS Lambda, and Amazon CloudWatch Logs.
 
-This project demonstrates a \*\*serverless image-upload workflow\*\* built entirely using AWS services.
+When an image is uploaded to an Amazon S3 bucket, an S3 ObjectCreated event automatically invokes the AWS Lambda function. The Lambda function extracts details of the uploaded object and records the execution information in Amazon CloudWatch Logs.
 
+---
 
+## 📌 Features Included
 
-When an image is uploaded to an \*\*Amazon S3 bucket\*\*, an \*\*ObjectCreated event\*\* automatically triggers an \*\*AWS Lambda function\*\*. The Lambda function extracts the uploaded object's details and records the execution information in \*\*Amazon CloudWatch Logs\*\*.
+1. 📦 Amazon S3 bucket for image storage
+2. ⚡ Automatic Lambda invocation using an S3 ObjectCreated event
+3. 🔍 Extraction of uploaded object details
+4. 📊 Execution logging using Amazon CloudWatch Logs
+5. 🔐 AWS IAM execution permissions
+6. 🧪 End-to-end testing using a sample image
+7. 📸 AWS configuration and testing screenshots
+8. 🏗️ Event-driven serverless architecture
 
+---
 
+## ☁️ AWS Services Used
 
-\---
-
-
-
-\## 📌 Features Included
-
-
-
-1\. 📦 Amazon S3 bucket for image storage
-
-2\. ⚡ Automatic Lambda invocation using an S3 ObjectCreated event
-
-3\. 🔍 Extraction of uploaded object details
-
-4\. 📊 Execution logging using Amazon CloudWatch Logs
-
-5\. 🔐 AWS IAM execution permissions
-
-6\. 🧪 End-to-end testing using a sample image
-
-7\. 📸 Configuration and testing screenshots
-
-8\. 🏗️ Serverless event-driven AWS architecture
-
-
-
-\---
-
-
-
-\## ☁️ AWS Services Used
-
-
-
-| Service | Purpose |
-
+| AWS Service | Purpose |
 |---|---|
-
 | 🪣 Amazon S3 | Stores uploaded images and generates ObjectCreated events |
-
 | ⚡ AWS Lambda | Processes the S3 event and extracts object details |
-
 | 📊 Amazon CloudWatch Logs | Stores Lambda execution logs |
-
 | 🔐 AWS IAM | Provides required Lambda execution permissions |
 
+---
 
-
-\---
-
-
-
-\## 🏗️ Architecture
-
-
+## 🏗️ Architecture
 
 ```text
+                         👤 User
+                           |
+                           | Upload Image
+                           v
+                +----------------------+
+                |      Amazon S3       |
+                |     Image Bucket     |
+                +----------------------+
+                           |
+                           | ObjectCreated Event
+                           v
+                +----------------------+
+                |      AWS Lambda      |
+                |  Q1-S3-Image-Logger  |
+                +----------------------+
+                           |
+                           | Execution Logs
+                           v
+                +----------------------+
+                |   Amazon CloudWatch  |
+                |        Logs          |
+                +----------------------+
+```
 
-&#x20;                        👤 User
+📄 **Detailed Architecture Documentation:**
 
-&#x20;                          |
+[View Architecture Documentation](architecture/architecture.md)
 
-&#x20;                          | Upload Image
+---
 
-&#x20;                          v
+## 🔄 Project Workflow
 
-&#x20;               +----------------------+
+The complete workflow is:
 
-&#x20;               |      Amazon S3       |
+```text
+1. User uploads an image
+          ↓
+2. Image is stored in Amazon S3
+          ↓
+3. S3 generates an ObjectCreated event
+          ↓
+4. Event automatically invokes AWS Lambda
+          ↓
+5. Lambda receives the S3 event
+          ↓
+6. Lambda extracts the uploaded object's details
+          ↓
+7. Execution details are written to CloudWatch Logs
+          ↓
+8. Logs are verified for successful execution
+```
 
-&#x20;               |     Image Bucket     |
+---
 
-&#x20;               +----------------------+
+## 🪣 S3 Bucket Configuration
 
-&#x20;                          |
+### Bucket Name
 
-&#x20;                          | ObjectCreated Event
+```text
+q1-s3-lambda-image-upload-2026
+```
 
-&#x20;                          v
+### AWS Region
 
-&#x20;               +----------------------+
+```text
+ap-south-1 (Asia Pacific - Mumbai)
+```
 
-&#x20;               |      AWS Lambda      |
+### Public Access
 
-&#x20;               |  Q1-S3-Image-Logger  |
+```text
+Block all public access: Enabled
+```
 
-&#x20;               +----------------------+
+### Purpose
 
-&#x20;                          |
+The Amazon S3 bucket is used to store the uploaded image and generate an ObjectCreated event when a new object is created.
 
-&#x20;                          | Execution Logs
+---
 
-&#x20;                          v
+## ⚡ AWS Lambda Configuration
 
-&#x20;               +----------------------+
+### Function Name
 
-&#x20;               |   Amazon CloudWatch  |
-
-&#x20;               |        Logs          |
-
-&#x20;               +----------------------+
-
-
-
-
-
-🔄 Project Workflow
-
-
-
-The complete workflow works as follows:
-
-
-
-1\. User uploads an image
-
-&#x20;         ↓
-
-2\. Image is stored in Amazon S3
-
-&#x20;         ↓
-
-3\. S3 generates ObjectCreated event
-
-&#x20;         ↓
-
-4\. Event automatically invokes AWS Lambda
-
-&#x20;         ↓
-
-5\. Lambda extracts object details
-
-&#x20;         ↓
-
-6\. Execution details are written to CloudWatch Logs
-
-&#x20;         ↓
-
-7\. Logs are verified for successful execution
-
-
-
-⚡ AWS Lambda Configuration
-
-Function Name
-
+```text
 Q1-S3-Image-Logger
+```
 
-Runtime
+### Runtime
 
+```text
 Python
+```
 
-Trigger
+### Trigger
 
+```text
 Amazon S3 – ObjectCreated Event
+```
 
-Function Purpose
-
-
-
-The Lambda function receives the S3 event and extracts information about the uploaded object.
-
-
-
-The function records:
-
-
-
-Event Name
-
-Event Time
-
-Bucket Name
-
-Object Key / File Name
-
-Object Size
-
-ETag
-
-Lambda Request ID
-
-
-
-AWS Lambda Configuration
-
-Function Name
-
-
-
-Q1-S3-Image-Logger
-
-
-
-Runtime
-
-
-
-Python
-
-
-
-Trigger
-
-
-
-Amazon S3 ObjectCreated Event
-
-
-
-Purpose
-
-
+### Function Purpose
 
 The Lambda function receives the S3 event, extracts the uploaded object's information, and records the execution details in CloudWatch Logs.
 
+---
 
+## 🔍 Lambda Object Details
 
+The Lambda function extracts the following information from the S3 event:
 
+- Event Name
+- Event Time
+- Bucket Name
+- Object Key / File Name
+- Object Size
+- ETag
+- Lambda Request ID
 
-📊 CloudWatch Logs
+### Source Code
 
+The complete Lambda source code is available here:
 
+[📄 View `lambda_function.py`](lambda_function.py)
+
+---
+
+## 💻 Lambda Processing Logic
+
+```text
+S3 ObjectCreated Event
+          ↓
+Lambda receives event
+          ↓
+Extract S3 record
+          ↓
+Get bucket name
+          ↓
+Get object key
+          ↓
+Get object size
+          ↓
+Get ETag
+          ↓
+Print execution details
+          ↓
+CloudWatch Logs
+```
+
+---
+
+## 📊 CloudWatch Logs
 
 Amazon CloudWatch Logs is used to monitor and verify Lambda execution.
 
-
-
 The Lambda function records information such as:
 
-
-
+```text
 ===== LAMBDA EXECUTION STARTED =====
-
-
 
 Request ID: <Lambda Request ID>
 
-
-
-\----- UPLOADED OBJECT DETAILS -----
-
-
+----- UPLOADED OBJECT DETAILS -----
 
 Event Name : ObjectCreated:Put
-
 Event Time : <Event Time>
-
 Bucket     : q1-s3-lambda-image-upload-2026
-
-Object Key : test\_IMAGE.png
-
+Object Key : test_IMAGE.png
 Object Size: 2131399 bytes
-
 ETag       : <ETag>
 
-
-
 ===== LAMBDA EXECUTION COMPLETED =====
-
-
+```
 
 The CloudWatch log confirms that the Lambda function was automatically invoked after the image upload.
 
+---
 
+## 🧪 Testing
 
-🧪 Testing
+### Test File
 
-Test File
+```text
+test_IMAGE.png
+```
 
-&#x20;    
-
-test\_IMAGE.png
-
-
-
-Testing Procedure
-
-
+### Testing Procedure
 
 1. Open the Amazon S3 bucket.
-2. Upload test\_IMAGE.png.
-3. Verify that the image appears in the bucket.
-4. Verify the S3 trigger connected to the Lambda function.
+2. Upload the `test_IMAGE.png` file.
+3. Verify that the image appears in the S3 bucket.
+4. Verify that the S3 trigger is connected to the Lambda function.
 5. Wait for the S3 ObjectCreated event.
 6. Verify that Lambda was invoked.
 7. Open Amazon CloudWatch Logs.
@@ -301,73 +233,215 @@ Testing Procedure
 9. Verify the uploaded object's information.
 10. Confirm successful Lambda execution.
 
+---
 
+## ✅ Testing Result
 
-📸 Screenshots
+The test was completed successfully.
 
+The image `test_IMAGE.png` was uploaded successfully to the Amazon S3 bucket.
+
+The S3 `ObjectCreated:Put` event automatically invoked the Lambda function.
+
+The Lambda function successfully extracted the uploaded object's details, including:
+
+- Bucket Name
+- Object Key
+- Object Size
+- ETag
+- Event Name
+- Event Time
+
+The execution information was successfully recorded in Amazon CloudWatch Logs.
+
+---
+
+## 📸 Screenshots
 
 ### 1️⃣ S3 Bucket Configuration
 
-![S3 Bucket Configuration](screenshot/01-s3-bucket.png)
+Creation of the Amazon S3 bucket used for storing uploaded images.
 
+![S3 Bucket Configuration](screenshot/s3-bucket.png)
+
+---
 
 ### 2️⃣ Image Uploaded to S3 Bucket
 
-![Image Uploaded to S3](screenshot/02-image-upload.png)
+Successful upload of the test image `test_IMAGE.png` to the Amazon S3 bucket.
 
+![Image Uploaded to S3](screenshot/image-upload.png)
+
+---
 
 ### 3️⃣ AWS Lambda Function Configuration
 
-![Lambda Function Configuration](screenshot/03-lambda-function.png)
+Creation and configuration of the AWS Lambda function `Q1-S3-Image-Logger`.
 
+![Lambda Function Configuration](screenshot/lambda-function.png)
+
+---
 
 ### 4️⃣ Lambda Function Code
 
-![Lambda Function Code](screenshot/04-lambda-code.png)
+Python implementation used to process the S3 event and extract uploaded object details.
 
+![Lambda Function Code](screenshot/lambda-code.png)
+
+---
 
 ### 5️⃣ S3 Trigger Configuration
 
-![S3 Trigger Configuration](screenshot/05-s3-trigger.png)
+Amazon S3 ObjectCreated trigger configured to automatically invoke the Lambda function.
 
+![S3 Trigger Configuration](screenshot/s3-trigger.png)
+
+---
 
 ### 6️⃣ CloudWatch Execution Logs
 
-![CloudWatch Execution Logs](screenshot/06-cloudwatch-logs.png)
+Amazon CloudWatch Logs showing successful Lambda execution and details of the uploaded S3 object.
 
+![CloudWatch Execution Logs](screenshot/cloudwatch-logs.png)
 
+---
 
+## 📁 Project Structure
 
-
-📁 Project Structure
-
+```text
 AWS-Q1-S3-Lambda-Image-Upload/
-
 │
-
 ├── architecture/
-
 │   └── architecture.md
-
 │
-
 ├── screenshot/
-
-│   ├── 01-s3-bucket.png
-
-│   ├── 02-image-upload.png
-
-│   ├── 03-lambda-function.png
-
-│   ├── 04-lambda-code.png
-
-│   ├── 05-s3-trigger.png
-
-│   └── 06-cloudwatch-logs.png
-
+│   ├── s3-bucket.png
+│   ├── image-upload.png
+│   ├── lambda-function.png
+│   ├── lambda-code.png
+│   ├── s3-trigger.png
+│   └── cloudwatch-logs.png
 │
-
-├── lambda\_function.py
-
+├── lambda_function.py
 └── README.md
+```
 
+---
+
+## 🔐 Security
+
+The project uses AWS IAM permissions for Lambda execution and CloudWatch logging.
+
+### Security Practices
+
+- ✅ S3 Block Public Access is enabled.
+- ✅ No public access is required for the bucket.
+- ✅ Lambda uses an IAM execution role.
+- ✅ No AWS access keys or secrets are stored in the repository.
+- ✅ No passwords or credentials are included in the project files.
+
+---
+
+## 🌍 Event-Driven Architecture
+
+This project demonstrates an event-driven serverless architecture.
+
+The Lambda function does not need to continuously run. Instead, it is triggered automatically when a new object is created in the S3 bucket.
+
+```text
+Image Upload
+     ↓
+Amazon S3
+     ↓
+ObjectCreated Event
+     ↓
+AWS Lambda
+     ↓
+CloudWatch Logs
+```
+
+---
+
+## 🎯 Project Objective
+
+The main objective of this project is to demonstrate how AWS services can be integrated to create an automated serverless workflow.
+
+The project demonstrates:
+
+- Amazon S3 object storage
+- S3 event notifications
+- AWS Lambda serverless execution
+- Object metadata extraction
+- CloudWatch logging
+- Event-driven architecture
+
+---
+
+## 🏁 Project Outcome
+
+The complete serverless image-upload workflow was successfully implemented and tested.
+
+### Final Workflow
+
+```text
+Amazon S3
+    ↓
+ObjectCreated Event
+    ↓
+AWS Lambda
+    ↓
+CloudWatch Logs
+```
+
+The uploaded image automatically triggered the Lambda function, and the uploaded object's details were successfully recorded in CloudWatch Logs.
+
+---
+
+## 📚 Learning Outcomes
+
+Through this project, the following AWS concepts were practiced:
+
+- Amazon S3 bucket creation and object upload
+- S3 event notifications
+- AWS Lambda function creation
+- Python-based Lambda implementation
+- IAM execution roles
+- Amazon CloudWatch Logs
+- Serverless architecture
+- Event-driven application design
+- AWS Console-based configuration and testing
+
+---
+
+## 📝 Assignment Reference
+
+**AWS Project Assignment – Set 7**
+
+**Question 1: Serverless Image Upload Workflow**
+
+The project implements the required workflow using Amazon S3, AWS Lambda, and Amazon CloudWatch Logs.
+
+---
+
+## 📊 Project Status
+
+```text
+Status       : ✅ Completed
+Environment  : AWS
+Region       : ap-south-1 (Mumbai)
+Architecture : Serverless
+```
+
+---
+
+## 🙌 Conclusion
+
+This project successfully demonstrates an automated serverless image-upload workflow using AWS.
+
+Whenever an image is uploaded to the Amazon S3 bucket, an ObjectCreated event automatically invokes the Lambda function. The function extracts the uploaded object's details and records the execution information in Amazon CloudWatch Logs.
+
+The complete workflow was successfully tested using `test_IMAGE.png`.
+
+---
+
+⭐ **AWS Serverless Image Upload Workflow – Q1**
