@@ -1,0 +1,43 @@
+import json
+import urllib.parse
+
+
+def lambda_handler(event, context):
+
+    print("===== LAMBDA EXECUTION STARTED =====")
+    print("Request ID:", context.aws_request_id)
+
+    records = event.get("Records", [])
+
+    for record in records:
+
+        event_name = record.get("eventName")
+        event_time = record.get("eventTime")
+
+        s3 = record.get("s3", {})
+
+        bucket_name = s3.get("bucket", {}).get("name")
+
+        obj = s3.get("object", {})
+
+        object_key = obj.get("key", "")
+        object_key = urllib.parse.unquote_plus(object_key)
+
+        object_size = obj.get("size")
+        object_etag = obj.get("eTag")
+
+        print("----- UPLOADED OBJECT DETAILS -----")
+        print("Event Name :", event_name)
+        print("Event Time :", event_time)
+        print("Bucket     :", bucket_name)
+        print("Object Key :", object_key)
+        print("Object Size:", object_size, "bytes")
+        print("ETag       :", object_etag)
+        print("-----------------------------------")
+
+    print("===== LAMBDA EXECUTION COMPLETED =====")
+
+    return {
+        "statusCode": 200,
+        "body": json.dumps("S3 image processed successfully")
+    }
